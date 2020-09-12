@@ -1,0 +1,8 @@
+[
+    {"editions" : {
+        "quran": 'quran-simple-enhanced'
+        "trans": ['en.asad', 'ml.abdulhameed'],
+        "audio": "ar.alafasy"
+      }
+    }
+]

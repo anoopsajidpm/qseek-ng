@@ -1,0 +1,13 @@
+<h3 class="text-center bg-light">{{ title }}</h3>
+<nav class='navbar col-12' >
+  <ol class="col-12" style="direction: rtl">
+    <li *ngFor="let surah of surahs; let i = index;"
+    [routerLink]= "'/'"  
+    [queryParams] = "{surah : surah.number}" 
+    role="button" (click)='listItemClick(i + 1)' class="text-right">
+        <h4>{{ surah.name }}</h4>
+        <p>{{ surah.englishNameTranslation }} | {{ surah.englishName }}<br />
+        Ayahs: {{ surah.numberOfAyahs }}</p>
+    </li>
+  </ol>
+</nav>

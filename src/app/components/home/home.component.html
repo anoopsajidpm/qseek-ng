@@ -1,0 +1,12 @@
+<div class="text-center bg-primary">
+    <h1>
+      <a class="text-white" routerLink="/" (click)="surahNo = 0; ayahInput = ''">{{ title }}</a>
+    </h1>
+  </div>
+<div class='container m-0 w-100 p-0 col-12'>
+  <app-surahs (surahList) = 'setSurahList($event)' (surahChange) = 'surahClicked($event)' *ngIf="!surahNo && !ayahInput"></app-surahs>
+  <app-detail-view [selectedSurah]="selectedSurah" [ayah]="ayahInput" [urlParams]="urlparam" ></app-detail-view>
+</div>
+<div class="container fixed-bottom bg-dark p-1 col-12" *ngIf="searchEnable">
+    <app-search (searchInput) = 'searchClicked($event)' [surahList]="surahList" [inputValue] = "ayahInput"></app-search>
+</div>

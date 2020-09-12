@@ -1,0 +1,40 @@
+<div class="container-fluid">
+
+  <div class="row">
+    <!-- Default dropup button -->
+    <div class="btn-group dropdown col-2">
+      <button type="button" class="mr-1 btn btn-secondary dropdown-toggle p-1" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        Surah - {{surahIndex}}
+      </button>
+
+      <div class="dropdown-menu">
+        <h6 class="border-bottom py-2 px-4">Select Surah</h6>
+        <ul style="overflow: auto;max-height: 70vh;" class="m-0 p-0">
+          <!-- Dropdown menu links -->
+          <li class="dropdown-item px-3" [ngClass]="{'active text-white': surahIndex === (i + 1)}"
+            (click)="surahSelected(i + 1)" *ngFor="let surah of surahList; let i = index">
+            <span class="py-2 font-weight-bold">{{ i + 1 }} - {{ surah.name }}</span><br />
+            <span class="pl-4 text-black-50"
+              [ngClass]="{'text-white-50': surahIndex === (i + 1)}">{{ surah.englishName }}</span>
+          </li>
+        </ul>
+        <a (click)="surahSelected(0)" *ngIf="surahIndex" class="d-block text-center border-top p-1">Reset Selection</a>
+
+      </div>
+    </div>
+
+    <input type="text" (input)="inputChange()" class="col mx-4 my-1 bg-dark p-1 text-white-50 border-0"
+    placeholder="Ayah number" [(ngModel)]="inputValue" />
+
+    <label class="text-white-50 p-1 col-1"> of {{ maxInputLimit }}</label>
+
+    <button class="col-1 float-right btn btn-primary p-1 m-1" value='Search' (click)='searchClick()' [routerLink]="'/'"
+    [queryParams]="{ayah : inputValue}">Search</button>
+  </div>
+
+
+ 
+  
+  
+</div>
