@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+.icon-prev {
+    background: url(./assets/svg/arrow_left.svg) no-repeat left center;
+    padding-left:18px;
+}
+
+.icon-next {
+    background: url(./assets/svg/arrow_right.svg) no-repeat right center;
+    padding-right: 18px;
+}
+
+.icon-more {
+    background: url(./assets/svg/more_icon.svg) no-repeat center center;
+    //padding-right: 18px;
+}

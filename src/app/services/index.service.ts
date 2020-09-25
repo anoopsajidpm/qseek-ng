@@ -11,7 +11,7 @@ export class IndexService {
   constructor(private http: HttpClient) { }
 
   fetchData(arg) {
-    console.log(this.baseUrl + arg);
+    //console.log(this.baseUrl + arg);
     return this.http.get(this.baseUrl + arg)
     .pipe(
       tap( // Log the result or error

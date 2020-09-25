@@ -1,0 +1,13 @@
+<div class="col-12 m-0 pb-4 mb-5">
+    <div *ngFor="let item of surahData.ayahs" class="border-bottom">
+      <ul class="list-group">
+        <li class="list-group-item border-0 text-right p-0" *ngFor="let ayah of item">
+          <div *ngIf="ayah.lang === 'ar' || isSelectedTrans(ayah.lang)" class="py-1"
+            [ngClass]="{'bg-light border-bottom': ayah.lang !== 'ar'}">
+            <span class="my-1 clearfix text-white text-center p-1" *ngIf="ayah.lang !== 'ar'">{{ ayah.lang }}</span>
+            {{ ayah.verse }}
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>

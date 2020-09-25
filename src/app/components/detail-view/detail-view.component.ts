@@ -42,6 +42,8 @@ export class DetailViewComponent implements OnInit, OnChanges {
   navOn: any;
   transOn: any;
 
+  showDetails = false;
+  
   totalAyahs = 6236; // total number os ayahs in holy quran;
   constructor(private mySvc: IndexService, private router: Router) {
     // this.ayah = '2:203';

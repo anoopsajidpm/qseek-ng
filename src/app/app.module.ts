@@ -11,6 +11,7 @@ import { SurahsComponent } from './components/surah-list/surahList.component';
 import { ParamsComponent } from './components/params/params.component';
 import { DetailViewComponent } from './components/detail-view/detail-view.component';
 import { SearchComponent } from './components/search/search.component';
+import { AyahListComponent } from './components/ayah-list/ayah-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,7 +19,8 @@ import { SearchComponent } from './components/search/search.component';
     SurahsComponent,
     ParamsComponent,
     DetailViewComponent,
-    SearchComponent
+    SearchComponent,
+    AyahListComponent
   ],
   imports: [
     BrowserModule,

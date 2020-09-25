@@ -1,66 +1,48 @@
-<div *ngIf="surah || ayah" class="container">
-<div class="container p-0">
-  <div class="row">
-    <!-- <div class="col-1 p-0" *ngIf="navOn">
-      <button (click)="navBtnClick($event)" value="back" class="btn btn-tertiary">Back</button>
-    </div> -->
-    <div *ngIf="surahData && surahData.surahInfo" class="col text-center">
-      <h2>{{ surahData.surahInfo.name }}</h2>
-      <h4>{{ surahData.surahInfo.englishNameTranslation }} | {{ surahData.surahInfo.englishName}}</h4>
+<div *ngIf="surah || ayah" class="container col-12 mx-0">
 
-      <button (click)="navBtnClick($event)" value="back" class="btn btn-tertiary" *ngIf="navOn">Back</button>
-      <div *ngIf="!ayah">Ayahs: {{ surahData.surahInfo.numberOfAyahs }}
-        <h3>Surah: {{ surahData.surahInfo.number }}</h3>
+  <!-- Header - selected Surah / Ayah Details -->
+  <div class="container p-0 mx-0 col-12 border-bottom mb-2">
+    <div *ngIf="surahData && surahData.surahInfo" class="row p-0 m-0 text-center">
+      <div class="col-md-4 col-sm-12 p-0 text-md-left text-sm-center">
+        <h2>{{ surahData.surahInfo.name }} <button *ngIf="!showDetails"  value="more" class="icon-more border-0 p-2" (click)="showDetails=true"></button>
+          <small class="text-muted font-size-10" *ngIf="showDetails"> | {{ surahData.surahInfo.englishName}}</small>
+        </h2>
+        <h5 *ngIf="showDetails">{{ surahData.surahInfo.englishNameTranslation }}
+          <small class="text-muted"> | Ayahs:
+            {{ surahData.surahInfo.numberOfAyahs }}</small>
+        </h5>
+        
       </div>
-      <div *ngIf="ayah">
-        Surah: {{ surahData.surahInfo.number }} | Ayahs: {{ surahData.surahInfo.numberOfAyahs }}
-        <h3>Ayah: {{ surahData.surahInfo.ayahInfo.numberInSurah }}</h3>
-        Ayah in Qur'an: {{ surahData.surahInfo.ayahInfo.number }} of {{ totalAyahs }}
-        <!-- Surah: {{ surahData.surahInfo.surahNo }} | {{ surahData.surahInfo.totalAyahs }} -->
-      </div>
-      <button (click)="navBtnClick($event)" value="next" class="btn btn-tertiary" *ngIf="navOn"> Next</button>
-      <div *ngIf="translations">
-        <h5>Translations</h5>
-        <span *ngFor="let item of translations">
-
-          <input type="checkbox" id="{{ 'trans-' + item.lang }}" name="trans" (click)='transClick($event)'
-            value="{{ item.lang }}" class="mx-1" [checked]="isSelectedTrans(item.lang)">
-          <label for="{{ 'trans-' + item.lang }}" class="pr-1">{{ item.lang }}</label>
-        </span>
-      </div>
-    </div>
-    <!-- <div class="col-1 text-right p-0" *ngIf="navOn">
-      <button (click)="navBtnClick($event)" value="next" class="btn btn-tertiary"> Next</button>
-    </div> -->
-    </div>
-  </div>
-
-
-
-  <div class="col-12 m-0 pb-4 mb-5">
-    <div *ngFor="let item of surahData.ayahs">
-      <ul class="list-group">
-        <li class="list-group-item border-0 text-right p-0" *ngFor="let ayah of item">
-          <!-- [ngClass]="{'d-none': ayah.lang !== 'ar' }"> -->
-
-          <div *ngIf="ayah.lang === 'ar' || isSelectedTrans(ayah.lang)" class="py-1"
-            [ngClass]="{'bg-light border-bottom': ayah.lang !== 'ar'}">
-            <span class="my-1 clearfix text-white text-center p-1" *ngIf="ayah.lang !== 'ar'">{{ ayah.lang }}</span>
-            {{ ayah.verse }}
+      <div class="col-md-4 col-sm-12 p-0">
+        <div class="row w-100 bg-white mx-0 justify-content-center my-1 py-1">
+          <button (click)="navBtnClick($event)" value="back" class="btn btn-tertiary icon-prev text-muted p-0 pl-3"
+            *ngIf="navOn"><small>Back</small></button>
+          <div>
+            <span *ngIf="ayah">Surah: {{ surahData.surahInfo.number }}</span>
+            <h3 *ngIf="!ayah">Surah: {{ surahData.surahInfo.number }}</h3>
+            <span *ngIf="ayah">
+              <h3>Ayah: {{ surahData.surahInfo.ayahInfo.numberInSurah }}</h3>
+              <small>Ayah in Qur'an:</small> {{ surahData.surahInfo.ayahInfo.number }} of {{ totalAyahs }}
+            </span>
           </div>
-          <!--  </span> -->
-        </li>
-      </ul>
-    </div>
-    <!-- <div *ngFor="let trans of translations" >
-        {{ trans.edition }}
-        <div *ngFor="let item of surahData.ayahs" >
-          <ul class="list-group border-0">
-            <li class="list-group-item border-0 p-1" *ngFor="let ayah of item" [ngClass]="{'d-none': ayah.lang != trans.lang || !trans.selected }">
-              {{ ayah.verse }}</li>
-          </ul>
+          <button (click)="navBtnClick($event)" value="next" class="btn btn-tertiary icon-next text-muted  p-0 pr-3"
+            *ngIf="navOn"><small>Next</small></button>
         </div>
-      </div> -->
+      </div>
+
+      <div *ngIf="translations" class="col-md-4 col-sm-12 p-0 text-md-right text-sm-center">
+        <h6>Translations</h6>
+        <div class="col-md-4 col-sm-12 row justify-content-center float-md-right m-0 p-0 w-auto">
+          <div class="px-1" *ngFor="let item of translations">
+            <input type="checkbox" id="{{ 'trans-' + item.lang }}" name="trans" (click)='transClick($event)'
+              value="{{ item.lang }}" class="mx-1" [checked]="isSelectedTrans(item.lang)">
+            <label for="{{ 'trans-' + item.lang }}" class="pr-1">{{ item.lang }}</label>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <!-- detail view contents -->
+  <app-ayah-list [surahData]="surahData" [translations]="translations"></app-ayah-list>
 </div>

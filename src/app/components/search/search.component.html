@@ -1,8 +1,8 @@
-<div class="container-fluid">
+<div class="container-fluid fixed-bottom bg-dark p-2">
 
-  <div class="row">
+  <div class="row col-12 p-0 m-0">
     <!-- Default dropup button -->
-    <div class="btn-group dropdown col-2">
+    <div class="btn-group dropdown col-2 p-0">
       <button type="button" class="mr-1 btn btn-secondary dropdown-toggle p-1" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
         Surah - {{surahIndex}}
@@ -24,12 +24,12 @@
       </div>
     </div>
 
-    <input type="text" (input)="inputChange()" class="col mx-4 my-1 bg-dark p-1 text-white-50 border-0"
+    <input type="text" (input)="inputChange()" class="col-6 m-0 bg-dark p-0 px-2 text-white-50 border-0"
     placeholder="Ayah number" [(ngModel)]="inputValue" />
 
-    <label class="text-white-50 p-1 col-1"> of {{ maxInputLimit }}</label>
+    <label class="text-white-50 p-0 m-0 col-2" style="line-height: 2em"> of {{ maxInputLimit }}</label>
 
-    <button class="col-1 float-right btn btn-primary p-1 m-1" value='Search' (click)='searchClick()' [routerLink]="'/'"
+    <button class="col-2 float-right btn btn-primary p-0 m-0" value='Search' (click)='searchClick()' [routerLink]="'/'"
     [queryParams]="{ayah : inputValue}">Search</button>
   </div>
 
