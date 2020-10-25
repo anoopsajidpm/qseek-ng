@@ -13,3 +13,24 @@
     background: url(./assets/svg/more_icon.svg) no-repeat center center;
     //padding-right: 18px;
 }
+.icon-surah {
+    background: url(./assets/svg/surah-icon.svg) no-repeat left center;
+}
+
+.icon-seek {
+    background: url(./assets/svg/search-icon.svg) no-repeat center center;
+    background-size: 25px;
+    text-indent: -99999px;
+}
+
+.font-ar{
+    font-family: 'kitab';
+    font-size: 2em;
+    direction: rtl;
+}
+
+.font-tr {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size:1.1em;
+    direction: ltr;
+}

@@ -43,7 +43,7 @@ export class DetailViewComponent implements OnInit, OnChanges {
   transOn: any;
 
   showDetails = false;
-  
+
   totalAyahs = 6236; // total number os ayahs in holy quran;
   constructor(private mySvc: IndexService, private router: Router) {
     // this.ayah = '2:203';
@@ -128,7 +128,7 @@ export class DetailViewComponent implements OnInit, OnChanges {
       if (changes.selectedSurah.currentValue) {
         this.surah = this.selectedSurah ? this.selectedSurah.number : 0;
         this.router.navigate(['/'], { queryParams: { surah: this.surah }});
-      } 
+      }
     } else {
       if (changes.ayah) {
         if (changes.ayah.currentValue) {

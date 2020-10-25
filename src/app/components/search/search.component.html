@@ -2,11 +2,11 @@
 
   <div class="row col-12 p-0 m-0">
     <!-- Default dropup button -->
-    <div class="btn-group dropdown col-2 p-0 pr-2">
+    <div class="btn-group dropdown p-0 pr-2" style="width:100px;">
       
-      <button type="button" class="mr-1 btn btn-secondary dropdown-toggle p-1" data-toggle="dropdown"
+      <button type="button" class="mr-1 btn btn-secondary dropdown-toggle p-1 icon-surah text-right border-0" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
-        Surah - {{surahIndex}}
+        {{surahIndex}}
       </button>
       
       <div class="dropdown-menu">
@@ -25,13 +25,13 @@
       </div>
     </div>
 
-    <input type="text" (input)="inputChange()" class="col-6 m-0 bg-dark p-0 px-2 text-white-50 border-0"
+    <input type="text" (input)="inputChange()" class="col m-0 bg-dark p-0 px-2 text-white-50 border-0"
     placeholder="Ayah number" [(ngModel)]="inputValue" />
 
-    <label class="text-white-50 p-0 m-0 col-2" style="line-height: 2em"> of {{ maxInputLimit }}</label>
+    <label class="text-white-50 p-0 m-0" style="line-height: 2em; width:100px;"> of {{ maxInputLimit }}</label>
 
-    <button class="col-2 float-right btn btn-primary p-0 m-0" value='Search' (click)='searchClick()' [routerLink]="'/'"
-    [queryParams]="{ayah : inputValue}">Search</button>
+    <button class="float-right btn btn-primary p-0 m-0 icon-seek border-0" value='Search' (click)='searchClick()' [routerLink]="'/'"
+    [queryParams]="{ayah : inputValue}" style="width: 50px;">Search</button>
   </div>
 
 

@@ -43,6 +43,10 @@
     </div>
   </div>
 
+  <audio controls class="w-100 bg-light" *ngIf="ayah && surahData.audio">
+      <source src = "{{surahData.audio}}" type="audio/wav" />
+      Your browser does not support the <code>audio</code> element.
+  </audio>
   <!-- detail view contents -->
   <app-ayah-list [surahData]="surahData" [translations]="translations"></app-ayah-list>
 </div>

@@ -2,9 +2,9 @@
     <div *ngFor="let item of surahData.ayahs" class="border-bottom">
       <ul class="list-group">
         <li class="list-group-item border-0 text-right p-0" *ngFor="let ayah of item">
-          <div *ngIf="ayah.lang === 'ar' || isSelectedTrans(ayah.lang)" class="py-1"
-            [ngClass]="{'bg-light border-bottom': ayah.lang !== 'ar'}">
-            <span class="my-1 clearfix text-white text-center p-1" *ngIf="ayah.lang !== 'ar'">{{ ayah.lang }}</span>
+          <div *ngIf="ayah.lang === 'ar' || isSelectedTrans(ayah.lang)" class="py-1 font-ar"
+            [ngClass]="{'bg-light border-bottom text-left font-tr': ayah.lang !== 'ar'}" >
+            <span class="my-1 clearfix d-block text-white text-center px-1 text-white rounded bg-secondary" style="width:30px;" *ngIf="ayah.lang !== 'ar'">{{ ayah.lang }}</span>
             {{ ayah.verse }}
           </div>
         </li>
