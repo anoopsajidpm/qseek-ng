@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterContentChecked, ViewChild, ElementRef } from '@angular/core';
 import { IndexService } from 'src/app/services/index.service';
 // import { ConsoleReporter } from 'jasmine';
 import { Router } from '@angular/router';
@@ -13,6 +13,8 @@ export class DetailViewComponent implements OnInit, OnChanges {
   @Input()
   selectedSurah: any;
   surah: number;
+
+  @ViewChild('qseekPlayer') qseekPlayer: ElementRef;
   // @Input()
   // details: any;
 
@@ -24,6 +26,8 @@ export class DetailViewComponent implements OnInit, OnChanges {
 
   editions = [];
 
+  audioSource = '';
+  audioTime = '';
   // @Input()
   // translations: string;
   // audio: string;
@@ -37,10 +41,13 @@ export class DetailViewComponent implements OnInit, OnChanges {
   @Input()
   urlParams: any;
 
-  
+
   newUrl: string;
   navOn: any;
   transOn: any;
+
+  surahAudio = [];
+  currentTrack = 0;
 
   showDetails = false;
 
@@ -58,6 +65,55 @@ export class DetailViewComponent implements OnInit, OnChanges {
 
 
   }
+
+  
+  reciteSurah() {
+      
+      let index = this.currentTrack;
+      console.log(this.surahAudio.length);
+      this.changeAudioSrc(this.surahAudio[index]);
+      
+    
+    this.qseekPlayer.nativeElement.onended = () => {
+      console.log(this.surahAudio);
+      index++;
+      if (index < this.surahAudio.length) {
+        //index++;
+        this.currentTrack = index;
+        this.changeAudioSrc(this.surahAudio[index]);
+        //index++;
+       // this.currentTrack = index >= this.surahAudio.length ? 0 : index;
+      } else {
+        this.currentTrack = 0;
+      }
+    };
+  }
+
+  changeAudioSrc(src, clickCount?){
+    if (this.audioSource !== src) {
+      this.audioSource = src;
+      this.qseekPlayer.nativeElement.load();
+      this.audioTime = '';
+    }
+    /* if (this.qseekPlayer.nativeElement.paused) {
+      this.qseekPlayer.nativeElement.play();
+    } */
+    //console.log(this.surahAudio);
+    if (this.qseekPlayer.nativeElement.paused) {
+      // console.log(dur);
+       this.qseekPlayer.nativeElement.currentTime = this.audioTime;
+       this.qseekPlayer.nativeElement.play();
+     } else {
+       //console.log(this.qseekPlayer.nativeElement.currentTime);
+       this.audioTime = clickCount && clickCount === 2 ? '' : this.qseekPlayer.nativeElement.currentTime;
+       this.qseekPlayer.nativeElement.pause();
+     }
+  }
+
+  reciteAyah(srcData) {
+    console.log(srcData);
+    this.changeAudioSrc(srcData.text, srcData.clicked);
+  }
   // http://api.alquran.cloud/v1/ayah/262/editions/quran-uthmani,en.asad,en.pickthall
 
   ngOnInit() {
@@ -71,7 +127,7 @@ export class DetailViewComponent implements OnInit, OnChanges {
       // if url parameters there
       this.surah = this.urlParams.surah ? this.urlParams.surah : 0;
       // if (!this.surah) {
-        this.ayah = !this.surah && this.urlParams.ayah ? this.urlParams.ayah : undefined;
+      this.ayah = !this.surah && this.urlParams.ayah ? this.urlParams.ayah : undefined;
       // }
       // }
       this.navOn = <number>(this.urlParams.nav || this.urlParams.n);
@@ -88,12 +144,12 @@ export class DetailViewComponent implements OnInit, OnChanges {
       this.transOn = undefined;
     } */
 
-    
+
     // if (this.surah || this.ayah) {
-      this.initEditions();
+    this.initEditions();
     // }
     // this.isInTrans('en');
-     this.getData();
+    this.getData();
 
   }
 
@@ -127,17 +183,17 @@ export class DetailViewComponent implements OnInit, OnChanges {
     if (changes.selectedSurah) {
       if (changes.selectedSurah.currentValue) {
         this.surah = this.selectedSurah ? this.selectedSurah.number : 0;
-        this.router.navigate(['/'], { queryParams: { surah: this.surah }});
+        this.router.navigate(['/'], { queryParams: { surah: this.surah } });
       }
     } else {
       if (changes.ayah) {
         if (changes.ayah.currentValue) {
-          this.router.navigate(['/'], { queryParams: { ayah: this.ayah }});
+          this.router.navigate(['/'], { queryParams: { ayah: this.ayah } });
         }
       }
     }
-    
-   
+
+
     //this.surah = this.selectedSurah ? this.selectedSurah.number : 0;
 
     console.log(this.surah);
@@ -196,7 +252,7 @@ export class DetailViewComponent implements OnInit, OnChanges {
 
   }
 
-  
+
   // gets data through service call
   getData() {
     this.urlString = this.setParams();
@@ -214,33 +270,10 @@ export class DetailViewComponent implements OnInit, OnChanges {
       );
   }
 
-
   processData(data) {
-    // this.surahData = data.data;
     const sData = data.data;
-    // console.log(data);
-    const moreInfo = (this.ayah ? sData[0].surah : sData[0]);
-
     console.log(this.selectedSurah);
-    let surahDetails: any;
-
-    /*  if (this.selectedSurah){
-       surahDetails = this.selectedSurah;
-       //this.totalAyahs = this.selectedSurah.totalAyahs;
-     } else { */
-    surahDetails = moreInfo;
-    // this.totalAyahs = 6236;
-    // }
-
-    /* const surahDetails = {
-      'name': moreInfo.name,
-      'englishName': moreInfo.englishName,
-      'englishTrans': moreInfo.englishNameTranslation,
-      'surahNo': moreInfo.number,
-      'totalAyahs': moreInfo.numberOfAyahs,
-      'revelationType': moreInfo.revelationType,
-      'ayahInfo': {}
-    }; */
+    const surahDetails = this.ayah ? sData[0].surah : sData[0];
 
     surahDetails.ayahInfo = {};
     console.log(surahDetails);
@@ -266,17 +299,24 @@ export class DetailViewComponent implements OnInit, OnChanges {
       'surahInfo': surahDetails,
       'audio': '',
       'mp3': [],
-      'ayahs': new Array(totAyahs)
+      'ayahs': new Array(totAyahs),
+      'audios': new Array(totAyahs)
     };
     const ayah = new Array(totAyahs);
+    const audio = new Array(totAyahs);
     for (let i = 0; i < totAyahs; i++) {
       const temp = [];
+      const audioTemp = [];
       let surah_ayah;
       sData.forEach((item) => {
         // console.log(item);
         surah_ayah = (this.ayah ? item : item.ayahs[i]);
         // console.log(surah_ayah);
         if (item.edition.format === 'audio') {
+          audioTemp.push({
+            'audio': surah_ayah.audio,
+            'mp3': surah_ayah.audioSecondary
+          });
           surah.audio = surah_ayah.audio;
           surah.mp3 = surah_ayah.audioSecondary;
         } else {
@@ -288,12 +328,25 @@ export class DetailViewComponent implements OnInit, OnChanges {
         }
       });
       ayah[i] = temp;
+      audio[i] = audioTemp;
     }
     surah.ayahs = ayah;
+    surah.audios = audio;
+    this.surahAudio = this.surah ? this.getPlaylist(audio) : undefined;
+    this.audioSource = audio[0][0].audio; // initialize with first ayah audio
     // console.log(surah);
     this.surahData = surah;
 
     console.log(this.surahData);
+  }
+
+  getPlaylist(audios) {
+    const playlist = [];
+    console.log(audios);
+    audios.forEach(item => {
+      playlist.push(item[0].audio);
+    });
+    return playlist;
   }
 
   navBtnClick(evt) {
@@ -313,10 +366,10 @@ export class DetailViewComponent implements OnInit, OnChanges {
         if (this.ayah) {
           this.ayah = this.surahData.surahInfo.number + ':' + (<number>this.surahData.surahInfo.ayahInfo.numberInSurah - 1);
           // this.urlParam += this.surahData.surahInfo.surahNo + ':' + (<number>this.surahData.surahInfo.ayahInfo.numberInSurah - 1);
-          this.router.navigate(['/'], { queryParams: { ayah: this.ayah }});
+          this.router.navigate(['/'], { queryParams: { ayah: this.ayah } });
         } else {
           this.surah--;
-          this.router.navigate(['/'], { queryParams: { surah: this.surah }});
+          this.router.navigate(['/'], { queryParams: { surah: this.surah } });
           // this.urlParam += <number>(this.surahData.surahInfo.surahNo) - 1;
         }
       }
@@ -325,11 +378,11 @@ export class DetailViewComponent implements OnInit, OnChanges {
       if (currentNum < limit) {
         if (this.ayah) {
           this.ayah = this.surahData.surahInfo.number + ':' + (<number>this.surahData.surahInfo.ayahInfo.numberInSurah + 1);
-          this.router.navigate(['/'], { queryParams: { ayah: this.ayah }});
+          this.router.navigate(['/'], { queryParams: { ayah: this.ayah } });
           // this.urlParam += this.surahData.surahInfo.surahNo + ':' + (<number>this.surahData.surahInfo.ayahInfo.numberInSurah + 1);
         } else {
           this.surah++;
-          this.router.navigate(['/'], { queryParams: { surah: this.surah }});
+          this.router.navigate(['/'], { queryParams: { surah: this.surah } });
           // this.urlParam += <number>(this.surahData.surahInfo.surahNo) + 1;
         }
       }

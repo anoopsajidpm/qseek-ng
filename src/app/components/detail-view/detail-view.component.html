@@ -19,7 +19,7 @@
             *ngIf="navOn"><small>Back</small></button>
           <div>
             <span *ngIf="ayah">Surah: {{ surahData.surahInfo.number }}</span>
-            <h3 *ngIf="!ayah">Surah: {{ surahData.surahInfo.number }}</h3>
+            <h3 *ngIf="!ayah" (click)="reciteSurah()">Surah: {{ surahData.surahInfo.number }}</h3>
             <span *ngIf="ayah">
               <h3>Ayah: {{ surahData.surahInfo.ayahInfo.numberInSurah }}</h3>
               <small>Ayah in Qur'an:</small> {{ surahData.surahInfo.ayahInfo.number }} of {{ totalAyahs }}
@@ -42,11 +42,12 @@
       </div>
     </div>
   </div>
-
-  <audio controls class="w-100 bg-light" *ngIf="ayah && surahData.audio">
-      <source src = "{{surahData.audio}}" type="audio/wav" />
+  
+  <!-- *ngIf="ayah && surahData.audio"-->
+  <audio class="w-100 bg-light" *ngIf="audioSource" #qseekPlayer >
+      <source [src] = 'audioSource' type="audio/wav"  />
       Your browser does not support the <code>audio</code> element.
   </audio>
   <!-- detail view contents -->
-  <app-ayah-list [surahData]="surahData" [translations]="translations"></app-ayah-list>
+  <app-ayah-list [surahData]="surahData" [translations]="translations" (ayahToRecite)='reciteAyah($event)'></app-ayah-list>
 </div>

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +13,9 @@ export class HomeComponent implements OnInit {
   selectedSurah: any;
   ayahInput: string;
   searchEnable = true;
+  pageTitle: string;
+
+  //@Output() urlInput = new EventEmitter();
 
   /* navOn: any;
   transOn: any; */
@@ -29,8 +32,19 @@ export class HomeComponent implements OnInit {
       if(nav === '0') {
         this.searchEnable = false;
       }
-      //this.urlparam.surah = params['surah']
-      //this.urlparam.ayah = params['ayah'];
+      //if(params.vod){
+        if (params.vod) {
+          this.pageTitle = params.ayah ? 'Today\'s Verse: ' + params.ayah : (params.surah ? 'Surah of the Day: ' + params.surah : '');
+        } else {
+          this.pageTitle = params.ayah ? 'Ayah - ' + params.ayah :
+           (params.surah ? 'Surah - ' + params.surah : '');
+        }
+        /* this.pageTitle = params.vod ? "Today's Verse" : 
+        (params.ayah ? 'Ayah - ' + params.ayah :
+        params.surah ? 'Surah - ' + params.surah : ''); */
+      //} else {
+        
+      
       this.urlparam = params;
     });
   
@@ -41,14 +55,13 @@ export class HomeComponent implements OnInit {
         this.surahNo = <number>this.urlparam.surah;
       }
     }
-    
-
-    
   }
 
+  
   surahClicked(surah) {
     // console.log('called');
     console.log(surah);
+    this.pageTitle = surah.name;
     this.selectedSurah = surah;
     this.surahNo = surah.number;
   }
@@ -56,7 +69,7 @@ export class HomeComponent implements OnInit {
   searchClicked(input) {
     console.log(input);
     this.ayahInput = input ? input : '';
-    
+    this.pageTitle = 'Ayah:' + this.ayahInput;
   }
 
   setSurahList(data){

@@ -1,4 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output } from '@angular/core';
+//import { IndexService } from '../../services/index.service';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-ayah-list',
@@ -8,16 +10,41 @@ import { Component, OnInit, Input } from '@angular/core';
 export class AyahListComponent implements OnInit {
 
   @Input()
-    surahData: any;
+  surahData: any;
   @Input()
-    translations: any;
+  translations: any;
+  @Output() ayahToRecite = new EventEmitter();
+
+  clickCount = 0;
   
   constructor() { }
 
   ngOnInit() {
   }
 
-  isSelectedTrans(lang){
+  isSelectedTrans(lang) {
     return this.translations.find(item => (item.lang === lang) && item.selected);
+  }
+
+  
+
+  reciteAyah(indx, lang, evt) {
+    console.log(evt);
+    this.clickCount++;
+    if (lang === 'ar') {
+    setTimeout(() => {
+      /* if (this.clickCount === 1) {
+        // single
+      } else if (this.clickCount === 2) {
+        // double
+      } */
+      const ayah = {
+        'text': this.surahData.audios[indx][0].audio,
+        'clicked': this.clickCount
+      }
+      this.ayahToRecite.emit(ayah);
+      this.clickCount = 0;
+    }, 250);
+    }
   }
 }

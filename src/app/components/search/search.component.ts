@@ -1,9 +1,9 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
-import { Location } from '@angular/common';
-import { isNumber } from 'util';
+/* import { Location } from '@angular/common';
+import { isNumber } from 'util'; */
 // import { setTimeout } from 'timers';
 import { IndexService } from '../../services/index.service';
-import { filter } from 'rxjs/operators';
+//import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-search',

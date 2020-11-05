@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, AfterContentChecked } from '@angular/core';
 import { IndexService } from '../../services/index.service';
 @Component({
   selector: 'app-surahs',
@@ -6,6 +6,8 @@ import { IndexService } from '../../services/index.service';
   styleUrls: ['./surahList.component.scss']
 })
 export class SurahsComponent implements OnInit {
+
+  @Input() surahFromUrl: number;
 
   @Output() surahChange = new EventEmitter();
   @Output()
@@ -16,16 +18,16 @@ export class SurahsComponent implements OnInit {
   surahs = [];
 
   //totalAyahs: number;
-  constructor (private mySvc: IndexService) { }
+  constructor(private mySvc: IndexService) { }
 
   ngOnInit() {
     // this.getSurahList();
     this.getData('surah');
   }
 
-/*   getSurahList(){
-    this.getData('surah');
-  } */
+  /*   getSurahList(){
+      this.getData('surah');
+    } */
 
   /* getSurah(surah, audio = 'ar.alafasy'){
     this.getData('surah/' + surah + '/' + audio);
@@ -33,25 +35,28 @@ export class SurahsComponent implements OnInit {
 
   // - event function -- click
 
-  listItemClick(i){
+  listItemClick(i) {
     // console.log('hey I am  clicked in child');
     this.surahChange.emit(this.surahs[i - 1]);
     // console.log(this.surahs[i - 1]); //.number);
   }
 
-  getData(param ) {
+  getData(param) {
     //console.log(param);
     return this.mySvc.fetchData(param)
-    .subscribe(
-      data => {
-       // console.dir(data);
-        this.processData(data);
-      },
-      error => console.log('oops', error)
-    );
+      .subscribe(
+        data => {
+          // console.dir(data);
+          this.processData(data);
+        },
+        error => console.log('oops', error)
+      );
   }
-  processData(data){
+  processData(data) {
     this.surahs = data.data;
     this.surahList.emit(data.data);
+    if (this.surahFromUrl) {
+      this.listItemClick(<number>(this.surahFromUrl) + 1);
+    }
   }
 }
