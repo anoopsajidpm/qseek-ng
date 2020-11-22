@@ -1,4 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+
+// variables 
+$light-blue-bg: #bdecff;
+h1{
+    font-size:1.8em;
+}
+.qseek-logo{
+    
+    color: $light-blue-bg;
+    // background-color: rgba(255,255,255,0.6);
+    margin: 5px 0;
+    padding: 0 5px 3px;
+    // border-radius: 5px;
+}
 .icon-prev {
     background: url(./assets/svg/arrow_left.svg) no-repeat left center;
     padding-left:18px;
@@ -36,19 +50,53 @@
 }
 
 .sub-title{
-    font-size: 1.1em;
-    border: solid 1px white;
-    border-radius: 5px;
+    font-size: 0.7em;
+    border-left: solid 1px rgba(255,255,255,0.5);
+    // border-radius: 5px;
 }
 
+.right-title {
+    font-size: 1.1em;
+    border: solid 1px white;
+    border-radius: 0px;
+    box-sizing: border-box;
+    line-height: 1.7em;
+}
+
+.bg-primary {
+    background-color: #007bff !important;
+}
+
+.color-primary {
+    color: #007bff;
+}
+.color-inactive {
+    color: $light-blue-bg;
+}
 .ayah-index{
-    border: solid 1px #ccc;
-    background-color: #ccc;
+    //border: solid 1px #ccc;
+    background-color: $light-blue-bg;
     font-size: .5em;
     display: inline-block;
     width: 30px;
     height: 30px;
     border-radius: 15px;
     text-align: center;
-    color: white;
+}
+
+.smaller{
+    font-size: 60%;
+    font-weight: normal;
+}
+
+.bg-lightBlue {
+    background-color: $light-blue-bg;
+}
+
+.qplayer-wrapper {
+    cursor: pointer;
+    max-width: 350px;
+    margin: auto;
+    height: 30px;
+    border-radius: 15px;
 }

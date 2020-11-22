@@ -1,4 +1,4 @@
-<div *ngIf="surah || ayah" class="container col-12 mx-0">
+<div *ngIf="surah || ayah" class="container col-12 m-0 p-0">
 
   <!-- Header - selected Surah / Ayah Details -->
   <div class="container p-0 mx-0 col-12 border-bottom mb-2">
@@ -14,19 +14,50 @@
         
       </div>
       <div class="col-md-4 col-sm-12 p-0">
-        <div class="row w-100 bg-white mx-0 justify-content-center my-1 py-1">
-          <button (click)="navBtnClick($event)" value="back" class="btn btn-tertiary icon-prev text-muted p-0 pl-3"
-            *ngIf="navOn"><small>Back</small></button>
+        <div class="row w-100 bg-white mx-0 justify-content-center mb-1 pb-1">
+          <!-- <button (click)="navBtnClick($event)" value="back" class="btn btn-tertiary pr-3 align-self-center text-muted p-0" 
+            *ngIf="navOn"> -->
+          
+            <i-bs 
+            name="arrow-left-circle" 
+            width="1.5rem" 
+            height="1.5rem"
+            (click)="navBtnClick('back')"
+            *ngIf="navOn"
+            class="pr-3 align-self-center color-primary"
+            >
+          </i-bs>
+          <!-- <small class="ml-1">Back</small>
+          </button> -->
           <div>
+            
             <span *ngIf="ayah">Surah: {{ surahData.surahInfo.number }}</span>
-            <h3 *ngIf="!ayah" (click)="reciteSurah()">Surah: {{ surahData.surahInfo.number }}</h3>
+            <h3 (click)="reciteSurah()">{{ ayah ? 'Ayah' : 'Surah' }}: {{ currentNum }}<span class="text-muted"> / {{ navLimit }}</span></h3>
             <span *ngIf="ayah">
-              <h3>Ayah: {{ surahData.surahInfo.ayahInfo.numberInSurah }}</h3>
-              <small>Ayah in Qur'an:</small> {{ surahData.surahInfo.ayahInfo.number }} of {{ totalAyahs }}
+              <small>Ayah in Qur'an:</small> {{ surahData.surahInfo.ayahInfo.number }} <small>of {{ totalAyahs }}</small>
             </span>
           </div>
-          <button (click)="navBtnClick($event)" value="next" class="btn btn-tertiary icon-next text-muted  p-0 pr-3"
-            *ngIf="navOn"><small>Next</small></button>
+          <!-- <button (click)="navBtnClick('next')" value="next" class="btn btn-tertiary icon-next text-muted  p-0 pr-3"
+            *ngIf="navOn"><small>Next</small></button> -->
+            <i-bs 
+            name="arrow-right-circle" 
+            width="1.5rem" 
+            height="1.5rem"
+            (click)="navBtnClick('next')"
+            *ngIf="navOn"
+            class="pl-3 align-self-center color-primary border-top-sm"
+            ></i-bs>
+        </div>
+
+        <div class="row bg-light align-items-center justify-content-center border mb-2 pr-3 qplayer-wrapper"  (click)="reciteSurah()" style="cursor: pointer;">
+            <i-bs 
+            [name]="playPause" 
+            width="1.5rem" 
+            height="1.5rem"
+           
+            class="pl-3 align-self-center color-primary border-top-sm"
+            ></i-bs>
+            <small>{{ playStatus }}</small>
         </div>
       </div>
 

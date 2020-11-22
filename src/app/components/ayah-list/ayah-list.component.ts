@@ -16,10 +16,11 @@ export class AyahListComponent implements OnInit {
   @Output() ayahToRecite = new EventEmitter();
 
   clickCount = 0;
-  
+
   constructor() { }
 
   ngOnInit() {
+    
   }
 
   isSelectedTrans(lang) {
@@ -28,8 +29,9 @@ export class AyahListComponent implements OnInit {
 
   
 
-  reciteAyah(indx, lang, evt) {
-    console.log(evt);
+  reciteAyah(indx, lang) {
+   // console.log(evt);
+    //console.log(this.surahData);
     this.clickCount++;
     if (lang === 'ar') {
     setTimeout(() => {

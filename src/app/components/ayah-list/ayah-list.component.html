@@ -12,15 +12,15 @@
     <div *ngFor="let item of surahData.ayahs, let i = index" class="border-bottom">
       <ul class="list-group">
         <li class="list-group-item border-0 text-right p-0" *ngFor="let ayah of item">
-          <div *ngIf="ayah.lang === 'ar' || isSelectedTrans(ayah.lang)" class="py-1 font-ar"
+          <div *ngIf="ayah.lang === 'ar' || isSelectedTrans(ayah.lang)" class="pb-1 font-ar mt-1"
             [ngClass]="{'bg-light border-bottom text-left font-tr': ayah.lang !== 'ar'}" >
-            <span class="my-1 clearfix d-block text-white text-center px-1 text-white rounded bg-secondary" 
-            style="width:30px;" *ngIf="ayah.lang !== 'ar'">{{ ayah.lang }}</span>
-            <a (click)='reciteAyah(i, ayah.lang, $event)' >
-              <span *ngIf="ayah.lang === 'ar'" class="ayah-index">{{i + 1}}</span>
+            <small class="mb-1 clearfix d-block text-left px-2 py-1 text-muted rounded bg-lightBlue float-left" 
+            style="width:auto;" *ngIf="ayah.lang !== 'ar'">{{ ayah.lang }} - {{ ayah.name }}</small>
+            <div class="clearfix"></div>
+            <a (click)='reciteAyah(i, ayah.lang)' class="row m-0 text-dark p-1 px-2 text-decoration-none" >
+              <span *ngIf="surahData.showingSurah && ayah.lang === 'ar'" 
+              class="ayah-index text-muted ml-2 align-self-center">{{i + 1}}</span>
               {{ ayah.verse }} </a>
-            
-            <!-- {{ ayah.verse }} -->
           </div>
           
         </li>

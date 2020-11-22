@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, AfterContentChecked, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { IndexService } from 'src/app/services/index.service';
+
 // import { ConsoleReporter } from 'jasmine';
 import { Router } from '@angular/router';
 
@@ -21,6 +22,13 @@ export class DetailViewComponent implements OnInit, OnChanges {
   @Input()
   ayah: string;
 
+  qseek_player = {
+    'play': 1, 'pause': 2, 'stop': 3, 'replay': 4
+  };
+
+  //@Input() audioControl: number;
+
+  @Output() reciteStatus = new EventEmitter();
   // @Input() audio: boolean;
   // @Input()
 
@@ -51,11 +59,20 @@ export class DetailViewComponent implements OnInit, OnChanges {
 
   showDetails = false;
 
+  navLimit: number;
+  currentNum: number;
+  playPause = 'play-fill';
+  clickCount = 0;
   totalAyahs = 6236; // total number os ayahs in holy quran;
+  replayOn: boolean;
+  playStatus: string;
+
   constructor(private mySvc: IndexService, private router: Router) {
     // this.ayah = '2:203';
     // let el = document.getElementById('trans-en'); // + <string>ed.split('.')[0]);
     // console.log(el);
+    this.playPause = 'play-fill';
+    this.playStatus = 'Tap to listen Recitation';
     this.editions = [
       'quran-simple-enhanced',
       'en.asad',
@@ -66,91 +83,88 @@ export class DetailViewComponent implements OnInit, OnChanges {
 
   }
 
-  
+
   reciteSurah() {
-      
-      let index = this.currentTrack;
-      console.log(this.surahAudio.length);
-      this.changeAudioSrc(this.surahAudio[index]);
-      
-    
+    let index = this.currentTrack;
+    let clicks = 0;
+    this.clickCount++;
+    setTimeout(() => {
+      clicks = this.clickCount;
+      this.changeAudioSrc(this.surahAudio[index], clicks);
+      this.clickCount = 0;
+     
+      this.replayOn = clicks === 2 ? true : false;
+     
     this.qseekPlayer.nativeElement.onended = () => {
-      console.log(this.surahAudio);
       index++;
       if (index < this.surahAudio.length) {
-        //index++;
         this.currentTrack = index;
         this.changeAudioSrc(this.surahAudio[index]);
-        //index++;
-       // this.currentTrack = index >= this.surahAudio.length ? 0 : index;
       } else {
         this.currentTrack = 0;
+        this.playPause = 'play-fill';
+        this.playStatus = 'Tap to listen Recitation';
       }
     };
+  }, 250);
   }
 
-  changeAudioSrc(src, clickCount?){
+  changeAudioSrc(src, clickCount?) {
+    console.log('called');
+    
     if (this.audioSource !== src) {
       this.audioSource = src;
       this.qseekPlayer.nativeElement.load();
       this.audioTime = '';
     }
-    /* if (this.qseekPlayer.nativeElement.paused) {
+    if (clickCount && clickCount === 2) {
+      console.log('dbl click' + clickCount);
+      this.qseekPlayer.nativeElement.currentTime = '';
       this.qseekPlayer.nativeElement.play();
-    } */
-    //console.log(this.surahAudio);
-    if (this.qseekPlayer.nativeElement.paused) {
-      // console.log(dur);
-       this.qseekPlayer.nativeElement.currentTime = this.audioTime;
-       this.qseekPlayer.nativeElement.play();
-     } else {
-       //console.log(this.qseekPlayer.nativeElement.currentTime);
-       this.audioTime = clickCount && clickCount === 2 ? '' : this.qseekPlayer.nativeElement.currentTime;
-       this.qseekPlayer.nativeElement.pause();
-     }
+      this.playPause = 'pause-fill';
+    } else {
+      console.log('click 1 ' + clickCount);
+      if(!this.replayOn){
+        if (this.qseekPlayer.nativeElement.paused) {
+          this.qseekPlayer.nativeElement.currentTime = this.audioTime;
+          this.qseekPlayer.nativeElement.play();
+          this.playPause = 'pause-fill';
+        } else {
+          this.audioTime = this.qseekPlayer.nativeElement.currentTime;
+          this.qseekPlayer.nativeElement.pause();
+          this.playPause = 'play-fill';
+        }
+      }
+    }
+    this.playStatus = this.playPause === 'pause-fill' ? 
+    'Tap to Pause / Double Tap to Replay from start' : 
+    'Tap to listen Recitation';
   }
 
   reciteAyah(srcData) {
-    console.log(srcData);
     this.changeAudioSrc(srcData.text, srcData.clicked);
   }
   // http://api.alquran.cloud/v1/ayah/262/editions/quran-uthmani,en.asad,en.pickthall
 
   ngOnInit() {
-    // console.log(this.urlParams.n);
-
-    // this.surah = this.selectedSurah ? this.selectedSurah.number : 0;
-
-
+    let num;
 
     if (this.urlParams) {
-      // if url parameters there
       this.surah = this.urlParams.surah ? this.urlParams.surah : 0;
-      // if (!this.surah) {
+
       this.ayah = !this.surah && this.urlParams.ayah ? this.urlParams.ayah : undefined;
-      // }
-      // }
+
+      if (this.ayah && this.ayah.split(':').length === 2) {
+      }
       this.navOn = <number>(this.urlParams.nav || this.urlParams.n);
       this.transOn = this.urlParams.trans || this.urlParams.t ? this.urlParams.trans || this.urlParams.t : undefined;
 
     }
-    // if (this.navOn === undefined ) {
+    num = this.surah ? this.surah : (this.ayah ? this.ayah.split(':')[1] : 0);
+    this.currentNum = <number>num;
     this.navOn = this.navOn === undefined || <string>this.navOn === '1' ? true : false;
-    // }
-
-    /* if (this.urlParams && (this.urlParams.trans || this.urlParams.t)) {
-      this.transOn = this.urlParams.trans || this.urlParams.t;
-    } else {
-      this.transOn = undefined;
-    } */
-
-
-    // if (this.surah || this.ayah) {
     this.initEditions();
-    // }
-    // this.isInTrans('en');
     this.getData();
-
   }
 
   initEditions() {
@@ -173,13 +187,21 @@ export class DetailViewComponent implements OnInit, OnChanges {
           }
         }
       });
-      console.log(this.translations);
+      // console.log(this.translations);
     }
   }
-
+  ngAfterViewInit(): void {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
+    /* if(this.audioControl){
+      this.reciteSurah();
+    } */
+  }
   ngOnChanges(changes: SimpleChanges) {
     // changes.prop contains the old and the new value...
-    console.log(changes);
+    //console.log(changes.audioControl);
+
+
     if (changes.selectedSurah) {
       if (changes.selectedSurah.currentValue) {
         this.surah = this.selectedSurah ? this.selectedSurah.number : 0;
@@ -248,7 +270,7 @@ export class DetailViewComponent implements OnInit, OnChanges {
     });
 
 
-    console.log(this.translations);
+    // console.log(this.translations);
 
   }
 
@@ -256,12 +278,12 @@ export class DetailViewComponent implements OnInit, OnChanges {
   // gets data through service call
   getData() {
     this.urlString = this.setParams();
-    console.log(this.urlString);
+    // console.log(this.urlString);
     this.surahData = new Array();
     return this.mySvc.fetchData(this.urlString)
       .subscribe(
         data => {
-          console.log(data);
+          // console.log(data);
           // this.surahData.push(data);
           this.processData(data);
         }, error => {
@@ -272,11 +294,11 @@ export class DetailViewComponent implements OnInit, OnChanges {
 
   processData(data) {
     const sData = data.data;
-    console.log(this.selectedSurah);
+    // console.log(this.selectedSurah);
     const surahDetails = this.ayah ? sData[0].surah : sData[0];
 
     surahDetails.ayahInfo = {};
-    console.log(surahDetails);
+    // console.log(surahDetails);
 
     if (this.ayah) {
       surahDetails.ayahInfo = {
@@ -294,13 +316,15 @@ export class DetailViewComponent implements OnInit, OnChanges {
     // console.log(surahDetails);
     // const len = sData.length; // number of editions retreived
     const totAyahs = (this.ayah ? 1 : sData[0].ayahs.length);
+    this.navLimit = this.ayah ? surahDetails.numberOfAyahs : 114;
     // console.log(totAyahs);
+    /* 'audio': '',
+      'mp3': [], */
     const surah = {
       'surahInfo': surahDetails,
-      'audio': '',
-      'mp3': [],
       'ayahs': new Array(totAyahs),
-      'audios': new Array(totAyahs)
+      'audios': new Array(totAyahs),
+      'showingSurah': this.surah ? true : false
     };
     const ayah = new Array(totAyahs);
     const audio = new Array(totAyahs);
@@ -317,13 +341,16 @@ export class DetailViewComponent implements OnInit, OnChanges {
             'audio': surah_ayah.audio,
             'mp3': surah_ayah.audioSecondary
           });
-          surah.audio = surah_ayah.audio;
-          surah.mp3 = surah_ayah.audioSecondary;
+          //surah.audio = surah_ayah.audio;
+          //surah.mp3 = surah_ayah.audioSecondary;
         } else {
+          // console.log(item.edition);
           temp.push({
             'number': i + 1,
             'verse': surah_ayah.text,
-            'lang': item.edition.language
+            'lang': item.edition.language,
+            'identifier': item.edition.identifier,
+            'name': item.edition.name
           });
         }
       });
@@ -332,9 +359,11 @@ export class DetailViewComponent implements OnInit, OnChanges {
     }
     surah.ayahs = ayah;
     surah.audios = audio;
-    this.surahAudio = this.surah ? this.getPlaylist(audio) : undefined;
+
+    this.surahAudio = this.getPlaylist(audio); //this.surah ? this.getPlaylist(audio) : undefined;
     this.audioSource = audio[0][0].audio; // initialize with first ayah audio
     // console.log(surah);
+
     this.surahData = surah;
 
     console.log(this.surahData);
@@ -342,17 +371,17 @@ export class DetailViewComponent implements OnInit, OnChanges {
 
   getPlaylist(audios) {
     const playlist = [];
-    console.log(audios);
+    // console.log(audios);
     audios.forEach(item => {
       playlist.push(item[0].audio);
     });
     return playlist;
   }
 
-  navBtnClick(evt) {
-    const btn = evt.target.value; // || evt;
+  navBtnClick(btn: string) {
+    //const btn = actn; // || evt;
     let limit = 114;
-    console.log(this.surahData);
+    //console.log(this.surahData);
     let currentNum = this.surahData.surahInfo ? this.surahData.surahInfo.number : undefined;
     // this.urlParam = '/?surah=';
     if (this.ayah) {
@@ -361,14 +390,18 @@ export class DetailViewComponent implements OnInit, OnChanges {
       currentNum = this.surahData.surahInfo ? this.surahData.surahInfo.ayahInfo.numberInSurah : undefined;
     }
 
+    this.navLimit = limit;
+
+
     if (btn === 'back') {
       if (currentNum > 1) {
+        currentNum--;
         if (this.ayah) {
-          this.ayah = this.surahData.surahInfo.number + ':' + (<number>this.surahData.surahInfo.ayahInfo.numberInSurah - 1);
+          this.ayah = this.surahData.surahInfo.number + ':' + currentNum; //(<number>this.surahData.surahInfo.ayahInfo.numberInSurah - 1);
           // this.urlParam += this.surahData.surahInfo.surahNo + ':' + (<number>this.surahData.surahInfo.ayahInfo.numberInSurah - 1);
           this.router.navigate(['/'], { queryParams: { ayah: this.ayah } });
         } else {
-          this.surah--;
+          this.surah = currentNum; //--;
           this.router.navigate(['/'], { queryParams: { surah: this.surah } });
           // this.urlParam += <number>(this.surahData.surahInfo.surahNo) - 1;
         }
@@ -376,23 +409,23 @@ export class DetailViewComponent implements OnInit, OnChanges {
     }
     if (btn === 'next') {
       if (currentNum < limit) {
+        currentNum++;
         if (this.ayah) {
-          this.ayah = this.surahData.surahInfo.number + ':' + (<number>this.surahData.surahInfo.ayahInfo.numberInSurah + 1);
+          this.ayah = this.surahData.surahInfo.number + ':' + currentNum; // (<number>this.surahData.surahInfo.ayahInfo.numberInSurah + 1);
           this.router.navigate(['/'], { queryParams: { ayah: this.ayah } });
           // this.urlParam += this.surahData.surahInfo.surahNo + ':' + (<number>this.surahData.surahInfo.ayahInfo.numberInSurah + 1);
         } else {
-          this.surah++;
+          this.surah = currentNum; //++;
           this.router.navigate(['/'], { queryParams: { surah: this.surah } });
           // this.urlParam += <number>(this.surahData.surahInfo.surahNo) + 1;
         }
       }
     }
+    this.currentNum = currentNum;
 
     if (btn) {
       this.getData();
     }
-    /* console.log(this.urlParam);
-    return this.urlParam; */
   }
 
   setUrlParams(actn) {
@@ -432,7 +465,7 @@ export class DetailViewComponent implements OnInit, OnChanges {
       // this.surah--;
       // this.urlParam += <number>(this.surahData.surahInfo.surahNo) - 1;
     }
-    console.log(params);
+    // console.log(params);
     return params;
   }
 }

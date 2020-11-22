@@ -12,6 +12,21 @@ import { ParamsComponent } from './components/params/params.component';
 import { DetailViewComponent } from './components/detail-view/detail-view.component';
 import { SearchComponent } from './components/search/search.component';
 import { AyahListComponent } from './components/ayah-list/ayah-list.component';
+import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
+import { Play, PlayFill, Pause, PauseFill, MusicPlayer, ArrowLeftCircle, ArrowRightCircle, Search } from 'ngx-bootstrap-icons';
+
+// Select some icons (use an object, not an array)
+const icons = {
+  Play,
+  PlayFill,
+  Pause,
+  PauseFill,
+  MusicPlayer,
+  ArrowLeftCircle,
+  ArrowRightCircle,
+  Search
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,6 +41,7 @@ import { AyahListComponent } from './components/ayah-list/ayah-list.component';
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    NgxBootstrapIconsModule.pick(icons),
     RouterModule.forRoot([
       {
         path: 'quran',
@@ -33,7 +49,7 @@ import { AyahListComponent } from './components/ayah-list/ayah-list.component';
       },
       {
         path: 'surah',
-        component: HomeComponent //DetailViewComponent
+        component: HomeComponent // DetailViewComponent
       },
       {
         path: '',
