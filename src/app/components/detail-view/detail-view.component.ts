@@ -72,7 +72,7 @@ export class DetailViewComponent implements OnInit, OnChanges {
     // let el = document.getElementById('trans-en'); // + <string>ed.split('.')[0]);
     // console.log(el);
     this.playPause = 'play-fill';
-    this.playStatus = 'Tap to listen Recitation';
+    this.playStatus = 'Play Recitation';
     this.editions = [
       'quran-simple-enhanced',
       'en.asad',
@@ -92,26 +92,27 @@ export class DetailViewComponent implements OnInit, OnChanges {
       clicks = this.clickCount;
       this.changeAudioSrc(this.surahAudio[index], clicks);
       this.clickCount = 0;
-     
+
       this.replayOn = clicks === 2 ? true : false;
-     
-    this.qseekPlayer.nativeElement.onended = () => {
-      index++;
-      if (index < this.surahAudio.length) {
-        this.currentTrack = index;
-        this.changeAudioSrc(this.surahAudio[index]);
-      } else {
-        this.currentTrack = 0;
-        this.playPause = 'play-fill';
-        this.playStatus = 'Tap to listen Recitation';
-      }
-    };
-  }, 250);
+
+      this.qseekPlayer.nativeElement.onended = () => {
+        index++;
+        if (index < this.surahAudio.length) {
+          this.currentTrack = index;
+          this.changeAudioSrc(this.surahAudio[index]);
+        } else {
+          this.currentTrack = 0;
+          this.audioTime = '';
+          this.playPause = 'play-fill';
+          this.playStatus = 'Play Recitation';
+        }
+      };
+    }, 250);
   }
 
   changeAudioSrc(src, clickCount?) {
     console.log('called');
-    
+
     if (this.audioSource !== src) {
       this.audioSource = src;
       this.qseekPlayer.nativeElement.load();
@@ -124,7 +125,7 @@ export class DetailViewComponent implements OnInit, OnChanges {
       this.playPause = 'pause-fill';
     } else {
       console.log('click 1 ' + clickCount);
-      if(!this.replayOn){
+      if (!this.replayOn) {
         if (this.qseekPlayer.nativeElement.paused) {
           this.qseekPlayer.nativeElement.currentTime = this.audioTime;
           this.qseekPlayer.nativeElement.play();
@@ -136,9 +137,13 @@ export class DetailViewComponent implements OnInit, OnChanges {
         }
       }
     }
-    this.playStatus = this.playPause === 'pause-fill' ? 
-    'Tap to Pause / Double Tap to Replay from start' : 
-    'Tap to listen Recitation';
+    this.playStatus = this.playPause === 'pause-fill' ?
+      (this.surah ? 'Playing Ayah : ' + (this.currentTrack + 1) + ' | Double-tap to Replay' :
+        'Playing Ayah | Double-tap to Replay') :
+      this.currentTrack === 0 ? (this.surah ? 'Paused at Ayah: ' + (this.currentTrack + 1) + ' | Tap to Resume Surah' : 'Paused | Tap to Resume') :
+        (this.surah ?
+          'Paused on Ayah : ' + (this.currentTrack + 1) + ' | Tap to Resume' :
+          'Paused | Tap to Resume');
   }
 
   reciteAyah(srcData) {
@@ -200,21 +205,27 @@ export class DetailViewComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     // changes.prop contains the old and the new value...
     //console.log(changes.audioControl);
-
-
+    let num;
     if (changes.selectedSurah) {
       if (changes.selectedSurah.currentValue) {
         this.surah = this.selectedSurah ? this.selectedSurah.number : 0;
         this.router.navigate(['/'], { queryParams: { surah: this.surah } });
+
+        this.currentNum = <number>this.surah;
+        //this.initEditions();
+        this.getData();
       }
     } else {
       if (changes.ayah) {
         if (changes.ayah.currentValue) {
           this.router.navigate(['/'], { queryParams: { ayah: this.ayah } });
+          num = this.ayah ? this.ayah.split(':')[1] : 0;
+          this.currentNum = <number>num;
+          //this.initEditions();
+          this.getData();
         }
       }
     }
-
 
     //this.surah = this.selectedSurah ? this.selectedSurah.number : 0;
 
@@ -361,11 +372,15 @@ export class DetailViewComponent implements OnInit, OnChanges {
     surah.audios = audio;
 
     this.surahAudio = this.getPlaylist(audio); //this.surah ? this.getPlaylist(audio) : undefined;
+
+    this.audioTime = ''; //this.qseekPlayer.nativeElement.currentTime;
+    //this.qseekPlayer.nativeElement.pause();
+    this.playPause = 'play-fill';
     this.audioSource = audio[0][0].audio; // initialize with first ayah audio
     // console.log(surah);
 
     this.surahData = surah;
-
+    console.log('process data');
     console.log(this.surahData);
   }
 
@@ -391,7 +406,7 @@ export class DetailViewComponent implements OnInit, OnChanges {
     }
 
     this.navLimit = limit;
-
+    this.audioSource = '';
 
     if (btn === 'back') {
       if (currentNum > 1) {

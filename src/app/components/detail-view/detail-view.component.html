@@ -49,15 +49,15 @@
             ></i-bs>
         </div>
 
-        <div class="row bg-light align-items-center justify-content-center border mb-2 pr-3 qplayer-wrapper"  (click)="reciteSurah()" style="cursor: pointer;">
+        <div class="row bg-light align-items-center justify-content-center border mb-2 pr-3 qplayer-wrapper"
+          (click)="reciteSurah()">
             <i-bs 
             [name]="playPause" 
             width="1.5rem" 
             height="1.5rem"
-           
             class="pl-3 align-self-center color-primary border-top-sm"
             ></i-bs>
-            <small>{{ playStatus }}</small>
+            <small>{{ playStatus }} <!-- <a *ngIf="surah"> | Replay Surah</a> --></small> 
         </div>
       </div>
 

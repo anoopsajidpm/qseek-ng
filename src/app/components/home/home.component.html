@@ -2,17 +2,10 @@
     <h1 class="p-0 m-0 row">
       <a class="qseek-logo text-decoration-none p-0 pb-1" routerLink="/" 
       (click)="surahNo = 0; ayahInput = ''">{{ title }}</a>
-      <span class="sub-title px-2 text-white align-self-center ml-1">{{ pageTitle }}</span>
+      <!-- <span class="sub-title px-2 text-white align-self-center ml-1">{{ pageTitle }}</span> -->
     </h1>
     <h2 class="right-title px-2 m-0 text-white align-self-center">
       {{ pageTitleRight }}
-      <!-- <button value="play" class="audio-control" style="border:none 0; background-color: transparent; color: white;"> -->
-       <!--  <i-bs 
-        [name]="playPause" 
-        width="1.5rem" 
-        height="1.5rem"
-        (click)="clickAudioControl()">
-      </i-bs> -->
     </h2>
   </div>
   
@@ -21,5 +14,5 @@
   <app-detail-view (reciteStatus)="setQseekPlayer($event)" [selectedSurah]="selectedSurah" [ayah]="ayahInput" [urlParams]="urlparam" ></app-detail-view>
 </div>
 <!-- <div class="container fixed-bottom bg-dark p-1 col-12" *ngIf="searchEnable"> -->
-    <app-search (searchInput) = 'searchClicked($event)' [surahList]="surahList" [inputValue] = "ayahInput" *ngIf="searchEnable"></app-search>
+    <app-search (searchInput) = 'searchClicked($event)' [surahList]="surahList" [inputValue] = "ayahInput" [surahClicked] = "surahNo" *ngIf="searchEnable"></app-search>
 <!-- </div> -->

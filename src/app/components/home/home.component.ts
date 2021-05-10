@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
     'surah':undefined,
     'ayah':undefined
   } */
-  constructor(private route: ActivatedRoute) { 
+  constructor(private route: ActivatedRoute) {
     this.playPause = 'play-fill';
   }
 
@@ -46,17 +46,17 @@ export class HomeComponent implements OnInit {
         // double
       } */
       console.log(this.clickCount);
-      if(this.clickCount === 1) {
+      if (this.clickCount === 1) {
         this.audioStatus = this.audioStatus === this.qseek_player.play ? this.qseek_player.pause : this.qseek_player.play;
       } else {
         this.audioStatus = this.qseek_player.replay;
       }
-      
+
       /* const ayah = {
         'text': this.surahData.audios[indx][0].audio,
         'clicked': this.clickCount
       } */
-      
+
       //this.ayahToRecite.emit(ayah);
       this.clickCount = 0;
     }, 250);
@@ -70,12 +70,12 @@ export class HomeComponent implements OnInit {
       }
 
       if (params.vod) {
-        this.pageTitle = params.ayah ? 'Today\'s Verse' :
-          (params.surah ? 'Surah of the Day' : '');
+        this.pageTitleRight = params.ayah ? 'Today\'s Verse: ' + params.ayah :
+          (params.surah ? 'Surah of the Day: ' + params.surah : '');
+      } else {
+        this.pageTitleRight = params.ayah ? 'Ayah: ' + params.ayah :
+          (params.surah ? 'Surah: ' + params.surah : '');
       }
-      this.pageTitleRight = params.ayah ? 'Ayah: ' + params.ayah :
-        (params.surah ? 'Surah: ' + params.surah : '');
-        
       /* else {
         this.pageTitle = params.ayah ? 'Ayah - ' + params.ayah :
           (params.surah ? 'Surah - ' + params.surah : '');
@@ -98,6 +98,7 @@ export class HomeComponent implements OnInit {
         this.surahNo = <number>this.urlparam.surah;
       }
     }
+
   }
 
 

@@ -1,9 +1,10 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
 /* import { Location } from '@angular/common';
 import { isNumber } from 'util'; */
 // import { setTimeout } from 'timers';
 import { IndexService } from '../../services/index.service';
 //import { filter } from 'rxjs/operators';
+import { AyahListComponent } from '../ayah-list/ayah-list.component';
 
 @Component({
   selector: 'app-search',
@@ -20,6 +21,9 @@ export class SearchComponent implements OnInit {
   @Input()
   surahList: any;
 
+  @Input()
+  surahClicked: number;
+
   surahIndex: any;
   selectedSurah: any;
   name: any;
@@ -28,15 +32,14 @@ export class SearchComponent implements OnInit {
 
   constructor(private mySvc: IndexService) {
     // this.inputValue = '';
+    console.log(this.inputValue);
   }
 
   ngOnInit() {
-
     setTimeout(() => {
       console.log(this.surahList);
       if (!this.surahList) {
         this.getSurahs('surah');
-
       }
     }, 1000);
   }
@@ -107,13 +110,8 @@ export class SearchComponent implements OnInit {
             this.surahSelected(parseInt(inpString));
             inpString += inpString ? ':' : '';
           }
-
-
         }
       }
-
-
-
     } else {
       if (inpString.includes(':')) {
         // if surah is already set
@@ -186,5 +184,23 @@ export class SearchComponent implements OnInit {
       }
     }
     //this.surahList.emit(data.data);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+    //Add '${implements OnChanges}' to the class.
+    console.log(changes);
+    if (changes.surahClicked && changes.surahClicked.currentValue) {
+      const indx = changes.surahClicked.currentValue;
+      //this.maxInputLimit = this.selectedSurah[0].numberOfAyahs; // : 6236;
+      this.surahSelected(indx);
+    }
+    if(changes.inputValue && changes.inputValue.currentValue) {
+      const curInput = changes.inputValue.currentValue;
+      if(curInput.split(':').length > 1) {
+        this.surahIndex = curInput.split(':')[0];
+        this.inputValue = curInput.split(':')[1];
+      }
+    }
   }
 }
